@@ -1,0 +1,22 @@
+{
+  "name": "jquery.backgroundcover",
+  "version": "0.0.1",
+  "authors": [
+    "Thomas Appel <mail@thomas-appel.com>"
+  ],
+  "description": "BackgroundSize Cover polyfill for jQuery",
+  "main": "src/backgroundcover.js",
+  "keywords": [
+    "background-size",
+    "background-size-cover"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ]
+}
