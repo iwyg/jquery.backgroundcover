@@ -8,6 +8,7 @@
 
 `$.backgroundcover` respects the `background-position` properties of your element as well.
 
+### css
 ```css
 .background-image {
 	background-image: url(path/to/image.jpg);
@@ -16,18 +17,30 @@
 	/* you'd normally also set background-size here */
 }
 ```
-
+### html
 ```html
 <div class="background-image"></div>
 ```
 
+### js
 ```js
-// apply to an element that has a background image:
+// apply `backgroundcover` to an element that has a background image:
 $('.background-image').backgroundcover();
 
-// oe to an element without background image by setting the image source
+// or to an element without background image by setting the image source
 // explicitly:
 $('.my-div').backgroundcover('path/to/image.jpg');
+
+// you may also pass options:
+
+// setting `poll` to false will stop polling the element for size change
+// and instead only resizes the image on window resize events. `poll` is set to
+// `true`by default.
+$('.my-div').backgroundcover('path/to/image.jpg', {poll: false});
+
+// you can also add your custom destroy events, e.g. for angular you'd add
+// '$destroy'
+$('.my-div').backgroundcover('path/to/image.jpg', {destroy: 'destroyevent'});
 ```
 
 ## Note

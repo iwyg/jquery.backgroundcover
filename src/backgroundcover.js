@@ -1,14 +1,54 @@
 (function (window, $, undefined) {
   'use strict';
 
-  window.requestAnimFrame = (function () {
-    return window.requestAnimationFrame  ||
-      window.webkitRequestAnimationFrame ||
-      window.mozRequestAnimationFrame    ||
-      function (callback) {
-      window.setTimeout(callback, 1000 / 60);
+  /**
+   * $.backgroundcover is a css3 shim for css background-size: cover
+   *
+   * (c) Thomas Appel 2013
+   * @author Thomas Appel <mail@thomas-appel.com>
+   * @license MIT
+   */
+
+  var defaults = {
+    poll: true,
+    destroy: undefined
+  };
+
+  // polyfill for requestAnimationFrame
+  // @see https://gist.github.com/desandro/1866474
+  var lastTime = 0;
+  var prefixes = 'webkit moz ms o'.split(' ');
+  // get unprefixed rAF and cAF, if present
+  var requestAnimationFrame = window.requestAnimationFrame;
+  var cancelAnimationFrame = window.cancelAnimationFrame;
+  // loop through vendor prefixes and get prefixed rAF and cAF
+  var prefix;
+  for (var i = 0; i < prefixes.length; i++) {
+    if (requestAnimationFrame && cancelAnimationFrame) {
+      break;
+    }
+    prefix = prefixes[i];
+    requestAnimationFrame = requestAnimationFrame || window[prefix + 'RequestAnimationFrame'];
+    cancelAnimationFrame  = cancelAnimationFrame  || window[prefix + 'CancelAnimationFrame'] ||
+      window[prefix + 'CancelRequestAnimationFrame'];
+  }
+
+  // fallback to setTimeout and clearTimeout if either request/cancel is not supported
+  if (!requestAnimationFrame || !cancelAnimationFrame) {
+    requestAnimationFrame = function (callback, element) {
+      var currTime = new Date().getTime();
+      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+      var id = window.setTimeout(function () {
+        callback(currTime + timeToCall);
+      }, timeToCall);
+      lastTime = currTime + timeToCall;
+      return id;
     };
-  }());
+
+    cancelAnimationFrame = function (id) {
+      window.clearTimeout(id);
+    };
+  }
 
   function createImage(src) {
     return $('<img style="position:static;display:block;" src="' + src + '"/>');
@@ -61,9 +101,13 @@
     return element.width() / element.height();
   }
 
+  function getDestroyHandler(options) {
+    return options.destroy ? ' ' + options.destroy : '';
+  }
+
   function bindEvents(Ctrl, element) {
-    var eH = element.width(), eW = element.height();
-    (function loop() {
+    var eH = element.width(), eW = element.height(),
+    poll = function () {
       var dirty = false, h = element.height(), w = element.width();
       if (h !== eH || w !== eW) {
         dirty = true;
@@ -73,10 +117,31 @@
       if (dirty) {
         element.trigger('coverresize');
       }
-      window.requestAnimFrame(loop);
-    }());
+      if (element.parent().length) {
+        Ctrl.poll = requestAnimationFrame(poll);
+      }
+    };
 
-    element.on('coverresize', function () {
+    if (Ctrl.options.poll) {
+      poll();
+    }
+
+    if (!Ctrl.options.poll) {
+      Ctrl.noPoll = function () {
+        if (!element.parent().length) {
+          Ctrl.destroy();
+        }
+        element.trigger('coverresize');
+      };
+
+      $(window).on('resize.backgroundcover orientationchange.backgroundcover', Ctrl.noPoll);
+    }
+
+    element.on('remove destroyed' + getDestroyHandler(Ctrl.options), function () {
+      Ctrl.destroy();
+    });
+
+    element.on('coverresize resize', function () {
       var elemRatio = ratio(element),
       css, ih, iw,
       h = Ctrl.container.height(),
@@ -110,8 +175,8 @@
       mt = Ctrl.centerY ? 0 - Math.round((ih - h) / 2) : 0;
 
       css = {
-        height: ih,
-        width: iw
+        height: Math.round(ih),
+        width: Math.round(iw)
       };
       css[Ctrl.cPropX] = ml;
       css[Ctrl.cPropY] = mt;
@@ -119,15 +184,43 @@
     });
   }
 
-  function BackgroundCover(element, src) {
+  function unbindEvents(element, Ctrl) {
+    element.off('coverresize resize orientationchange');
+    element.off('remove destroyed' + getDestroyHandler(Ctrl.options));
+
+    if (!Ctrl.options.poll) {
+      $(window).off('resize.backgroundcover orientationchange.backgroundcover', Ctrl.noPoll);
+    }
+  }
+
+  function BackgroundCover(element, src, options) {
+    this.options = options;
     this.element = element;
+    this.ready = false;
+
     initImage(this, element, src);
     bindEvents(this, element);
   }
 
-  $.fn.backgroundcover = function (src) {
+  BackgroundCover.prototype = {
+    destroy: function () {
+      if (this.poll) {
+        cancelAnimationFrame(this.poll);
+      }
+
+      unbindEvents(this.element, this);
+
+      if (this.container.length) {
+        this.container.empty().remove();
+      }
+    }
+  };
+
+  $.fn.backgroundcover = function (src, options) {
+    var opts = $.extend({}, defaults, options || {});
     return this.each(function (index, element) {
-      new BackgroundCover($(element), src);
+      var el = $(element);
+      el.data('backgroundCover', new BackgroundCover(el, src, opts));
     });
   };
 
