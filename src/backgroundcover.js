@@ -121,7 +121,7 @@
 
   function BackgroundCover(element, src) {
     this.element = element;
-    initImage(this, element);
+    initImage(this, element, src);
     bindEvents(this, element);
   }
 
