@@ -50,8 +50,8 @@
     };
   }
 
-  function createImage(src) {
-    return $('<img style="position:absolute;display:block;" src="' + src + '"/>');
+  function createImage() {
+    return $('<img style="position:absolute; display:block;/>');
   }
 
   function createContainer(img) {
@@ -78,9 +78,8 @@
     Ctrl.inlineBg = element[0].style.backgroundImage === '';
 
     Ctrl.src = src ? src : element.css('backgroundImage').split(/(\(|\))/)[2];
-    Ctrl.img = createImage(Ctrl.src);
-    //Ctrl.img.css(propX, posX);
-    //Ctrl.img.css(propY, posY);
+    Ctrl.img = createImage();
+    Ctrl.img.attrs('src', src);
     Ctrl.img.css(propX, 0);
     Ctrl.img.css(propY, 0);
     Ctrl.img.load(function () {

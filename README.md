@@ -1,8 +1,12 @@
-# Simple Polifill for css3 *backgroundSize: cover*
+# Simple Polyfill for CSS3 *backgroundSize: cover*
 
-## Requirements: 
+## Requirements 
 
-- jQuery 1.9.* or higher
+- jQuery 1.9.\* or higher
+
+## Demo
+
+Demo page is available [here](http://iwyg.github.io/jquery.backgroundcover/).
 
 ## Usage
 
