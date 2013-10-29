@@ -51,7 +51,13 @@
   }
 
   function createImage() {
-    return $('<img style="position:absolute; display:block;/>');
+    var _img = new Image(), img = $(_img);
+    img.css({
+      position: 'absolute',
+      display: 'block'
+    });
+    return img;
+    //return $('<img style="position:absolute; display:block;/>');
   }
 
   function createContainer(img) {
@@ -61,12 +67,16 @@
   }
 
   function initImage(Ctrl, element, src) {
-    var h, w, posX, posY, propX, propY, cPropX, cPropY, centerX, centerY;
-
-
+    var exp, h, w, posXY, posX, posY, propX, propY, cPropX, cPropY, centerX, centerY;
 
     posX = element.css('backgroundPositionX');
     posY = element.css('backgroundPositionY');
+
+    if (!posY || !posX) {
+      posXY = element.css('backgroundPosition').split(' ');
+      posX = posXY[0];
+      posY = posXY[1];
+    }
 
     Ctrl.propX = propX = parseInt(posX, 10) === 100 ? 'right' : 'left';
     Ctrl.propY = propY = parseInt(posY, 10) === 100 ? 'bottom' : 'top';
@@ -76,12 +86,12 @@
     Ctrl.centerY = centerY = parseInt(posY, 10) === 50;
 
     Ctrl.inlineBg = element[0].style.backgroundImage === '';
-
-    Ctrl.src = src ? src : element.css('backgroundImage').split(/(\(|\))/)[2];
+    exp = new RegExp('\\"', 'gi');
+    Ctrl.src = src ? src : element.css('background-image').split(/(\(|\))/)[2].replace(exp, '');
     Ctrl.img = createImage();
-    Ctrl.img.attrs('src', src);
     Ctrl.img.css(propX, 0);
     Ctrl.img.css(propY, 0);
+
     Ctrl.img.load(function () {
       Ctrl.imgH = h = Ctrl.img.prop('height');
       Ctrl.imgW = w = Ctrl.img.prop('width');
@@ -90,14 +100,17 @@
       Ctrl.ratio = w / h;
       Ctrl.ready = true;
       element.trigger('coverresize');
-    });
+    }).attr('src', Ctrl.src);
+
     element.addClass('background-cover').css({
       position: 'relative',
       overflow: 'hidden',
       backgroundImage: 'none'
     });
+
     Ctrl.container = createContainer(Ctrl.img);
     Ctrl.container.append(Ctrl.img);
+
     element.append(Ctrl.container);
 
   }
@@ -219,7 +232,7 @@
       if (this.inlineBg) {
         this.element.css({backgroundImage: 'url(' + this.src + ')'});
       } else {
-        this.element.css('backgroundImage', '');
+        this.element.css('background-image', '');
       }
 
       if (this.container.length) {
