@@ -1,0 +1,192 @@
+* {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 100%;
+  line-height: 1;
+}
+body, a {
+  color: #fff;
+}
+
+small {
+  font-size: 0.7em;
+}
+
+footer p {
+  float: right;
+}
+footer {
+  padding-right: 1em;
+}
+.container, html, body {
+  width: 100%;
+  height: 100%;
+}
+img {
+  display: block;
+}
+
+.head {
+  position: relative;
+  max-width:75%;
+}
+h1, h2, h3 {
+  color: #fff;
+  line-height: 0.9;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+h1 {
+  text-transform: uppercase;
+  margin-top: -0.1em;
+  font-size: 8em;
+}
+h2, h3 {
+  font-weight: 400;
+  font-size: 2em;
+  padding-left: 0.3em;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+.container {
+  overflow: hidden;
+}
+
+.bgimage {
+  float: left;
+  -moz-background-size: cover;
+  -webkit-background-size: cover;
+  background-size: cover;
+
+  height: 100%;
+  width: 100%;
+}
+#bg1 {
+  background-image: url('landscape.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+#bg1 .background-cover-image {
+  background-color: grey;
+}
+#bg2 {
+  background-image: url('portrait.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+footer {
+  position: absolute;
+  bottom: 24px;
+  left: 0;
+  width: 100%;
+}
+
+footer nav {
+  overflow: hidden;
+}
+
+footer label {
+  font-weight: 600;
+  text-transform: uppercase;
+  background: #222;
+  float: left;
+}
+footer ul {
+  font-weight: 300;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+footer label, footer ul li a {
+  text-decoration: none;
+  padding: 12px;
+  display: block;
+  color: #fff;
+}
+footer ul li {
+  background: #222;
+  background: rgba(22, 22, 22, 0.5);
+  display: block;
+}
+
+footer ul li:hover, footer ul li.active {
+  background: #333;
+  background: rgba(22, 22, 22, 0.7);
+}
+
+@media screen and (min-width: 1024px) {
+  footer ul li {
+    float: left;
+    margin-left: 1px;
+  }
+  footer nav {
+    margin-top: 1em;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .head {
+    float: right;
+    position: relative;
+    max-width: 75%;
+  }
+
+  h1 {
+    font-size: 5em;
+  }
+  footer label {
+    clear: both;
+  }
+  footer nav {
+    width: 25%;
+  }
+  footer ul, footer label{
+    width: 100%;
+  }
+  footer ul {
+    float: left;
+  }
+  footer ul li {
+    margin-top: 1px;
+  }
+
+  footer ul li, footer label {
+    background: rgba(22, 22, 22, 0.5);
+  }
+
+  footer ul li:hover, footer ul li.active {
+    background: rgba(22, 22, 22, 0.7);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  footer {
+    width: 100%;
+  }
+  .head {
+    position: relative;
+  }
+
+  h1 {
+    font-size: 4em;
+  }
+  h2, h3 {
+    font-size: 1.4em;
+  }
+
+  footer label,
+  footer ul li {
+    background: rgba(22, 22, 22, 0.5);
+  }
+}
