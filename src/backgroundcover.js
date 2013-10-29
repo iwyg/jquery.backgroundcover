@@ -51,7 +51,7 @@
   }
 
   function createImage(src) {
-    return $('<img style="position:static;display:block;" src="' + src + '"/>');
+    return $('<img style="position:absolute;display:block;" src="' + src + '"/>');
   }
 
   function createContainer(img) {
@@ -63,20 +63,26 @@
   function initImage(Ctrl, element, src) {
     var h, w, posX, posY, propX, propY, cPropX, cPropY, centerX, centerY;
 
+
+
     posX = element.css('backgroundPositionX');
     posY = element.css('backgroundPositionY');
 
     Ctrl.propX = propX = parseInt(posX, 10) === 100 ? 'right' : 'left';
     Ctrl.propY = propY = parseInt(posY, 10) === 100 ? 'bottom' : 'top';
     Ctrl.cPropX = cPropX = propX === 'right' ? 'marginRight' : 'marginLeft';
-    Ctrl.cPropY = cPropX = propX === 'bottom' ? 'marginBottom' : 'marginTop';
+    Ctrl.cPropY = cPropY = propY === 'bottom' ? 'bottom' : 'top';
     Ctrl.centerX = centerX = parseInt(posX, 10) === 50;
     Ctrl.centerY = centerY = parseInt(posY, 10) === 50;
 
+    Ctrl.inlineBg = element[0].style.backgroundImage === '';
+
     Ctrl.src = src ? src : element.css('backgroundImage').split(/(\(|\))/)[2];
     Ctrl.img = createImage(Ctrl.src);
-    Ctrl.img.css(propX, posX);
-    Ctrl.img.css(propY, posY);
+    //Ctrl.img.css(propX, posX);
+    //Ctrl.img.css(propY, posY);
+    Ctrl.img.css(propX, 0);
+    Ctrl.img.css(propY, 0);
     Ctrl.img.load(function () {
       Ctrl.imgH = h = Ctrl.img.prop('height');
       Ctrl.imgW = w = Ctrl.img.prop('width');
@@ -197,6 +203,7 @@
     this.options = options;
     this.element = element;
     this.ready = false;
+    this.inlineBg = false;
 
     initImage(this, element, src);
     bindEvents(this, element);
@@ -209,6 +216,12 @@
       }
 
       unbindEvents(this.element, this);
+
+      if (this.inlineBg) {
+        this.element.css({backgroundImage: 'url(' + this.src + ')'});
+      } else {
+        this.element.css('backgroundImage', '');
+      }
 
       if (this.container.length) {
         this.container.empty().remove();
