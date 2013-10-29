@@ -72,7 +72,7 @@ h2, h3 {
   width: 100%;
 }
 #bg1 {
-  background-image: url('landscape.jpg');
+  background-image: url('../landscape.jpg');
   background-position: center center;
   background-repeat: no-repeat;
 }
@@ -81,7 +81,7 @@ h2, h3 {
   background-color: grey;
 }
 #bg2 {
-  background-image: url('portrait.jpg');
+  background-image: url('../portrait.jpg');
   background-position: center center;
   background-repeat: no-repeat;
 }
