@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'/>
+    <style>
+      * {
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 100%;
+        line-height: 1;
+      }
+      body, a {
+        color: #fff;
+      }
+
+      small {
+        font-size: 0.7em;
+      }
+
+      footer p {
+        float: right;
+      }
+      footer {
+        padding-right: 1em;
+      }
+      .container, html, body {
+        width: 100%;
+        height: 100%;
+      }
+      img {
+        display: block;
+      }
+
+      .head {
+        position: relative;
+        max-width:75%;
+      }
+      h1, h2, h3 {
+        color: #fff;
+        line-height: 0.9;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      h1 {
+        text-transform: uppercase;
+        margin-top: -0.1em;
+        font-size: 8em;
+      }
+      h2, h3 {
+        font-weight: 400;
+        font-size: 2em;
+        padding-left: 0.3em;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        overflow: hidden;
+      }
+
+      .bgimage {
+        float: left;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+
+        height: 100%;
+        width: 100%;
+      }
+      #bg1 {
+        //background-image: url('landscape.jpg');
+        background-image: url('portrait.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+
+      #bg1 .background-cover-image {
+        background-color: grey;
+      }
+      #bg2 {
+        background-image: url('portrait.jpg');
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      footer {
+        position: absolute;
+        bottom: 24px;
+        left: 0;
+        width: 100%;
+      }
+
+      footer nav {
+        overflow: hidden;
+      }
+
+      footer label {
+        font-weight: 600;
+        text-transform: uppercase;
+        background: #222;
+        float: left;
+      }
+      footer ul {
+        font-weight: 300;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      footer label, footer ul li a {
+        text-decoration: none;
+        padding: 12px;
+        display: block;
+        color: #fff;
+      }
+      footer ul li {
+        background: #222;
+        background: rgba(22, 22, 22, 0.5);
+        display: block;
+      }
+
+      footer ul li:hover, footer ul li.active {
+        background: #333;
+        background: rgba(22, 22, 22, 0.7);
+      }
+
+      @media screen and (min-width: 1024px) {
+        footer ul li {
+          float: left;
+          margin-left: 1px;
+        }
+        footer nav {
+          margin-top: 1em;
+        }
+      }
+      @media screen and (max-width: 1024px) {
+        .head {
+          float: right;
+          position: relative;
+          max-width: 75%;
+        }
+
+        h1 {
+          font-size: 5em;
+        }
+        footer label {
+          clear: both;
+        }
+        footer nav {
+          width: 25%;
+        }
+        footer ul, footer label{
+          width: 100%;
+        }
+        footer ul {
+          float: left;
+        }
+        footer ul li {
+          margin-top: 1px;
+        }
+
+        footer ul li, footer label {
+          background: rgba(22, 22, 22, 0.5);
+        }
+
+        footer ul li:hover, footer ul li.active {
+          background: rgba(22, 22, 22, 0.7);
+        }
+      }
+
+      @media screen and (max-width: 480px) {
+        footer {
+          width: 100%;
+        }
+        .head {
+          position: relative;
+        }
+
+        h1 {
+          font-size: 4em;
+        }
+        h2, h3 {
+          font-size: 1.4em;
+        }
+
+        footer label,
+        footer ul li {
+          background: rgba(22, 22, 22, 0.5);
+        }
+      }
+
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="src/backgroundcover.js"></script>
+</head>
+<body>
+  <a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+  <div class="container">
+    <div id="bg1" class="bgimage"></div>
+    <!--<div id="bg2" class="bgimage"></div>-->
+    <footer>
+      <div class="head">
+        <h1>Back&shy;ground Cover</h1>
+        <h2>CSS3 background-size:cover shim</h2>
+      </div>
+      <nav>
+      <label>position:</label>
+      <ul>
+        <li class="active">
+          <a class="position" href="#" data-pos='{"x":"center","y":"center"}'>center center</a>
+        </li>
+        <li>
+          <a class="position" href="#" data-pos='{"x": "center", "y": "top"}'>center top</a>
+        </li>
+        <li>
+          <a class="position" href="#" data-pos='{"x": "center", "y": "bottom"}'>center bottom</a>
+        </li>
+        <li>
+          <a class="position" href="#" data-pos='{"x": "left", "y": "center"}'>left center</a>
+        </li>
+        <li>
+          <a class="position" href="#" data-pos='{"x": "left", "y": "top"}'>left top</a>
+        </li>
+        <li>
+          <a class="position" href="#" data-pos='{"x":"left","y":"bottom"}'>left bottom</a>
+        </li>
+        <li>
+          <a class="position" href="#" data-pos='{"x":"right","y":"top"}'>right top</a>
+        </li>
+        <li>
+          <a class="position" href="#" data-pos='{"x":"right","y":"bottom"}'>right bottom</a>
+        </li>
+      </ul>
+    </nav>
+    <!--
+    <p><small></smapp>Image by <a target="_blank" href="http://teamjotty.com/">Dorothy Lin</a></small></p>
+    -->
+    <p><small></smapp>Image by <a target="_blank" href="http://www.flickr.com/photos/charliefoster">Charlie Foster</a></small></p>
+    </footer>
+  </div>
+  <script>
+
+  var image = $('#bg1'),
+  menu = $('footer').find('li'),
+  cover;
+  image.backgroundcover();
+  cover = image.data('backgroundCover');
+
+  function switchPosition(event) {
+    event.preventDefault();
+    cover.destroy();
+    menu.removeClass('active');
+
+    var pos = $(event.target).parent().addClass('active').end().data('pos');
+    image.css({
+      backgroundPositionY: pos.y,
+      backgroundPositionX: pos.x
+    });
+    image.backgroundcover();
+    cover = image.data('backgroundCover');
+  }
+
+  $('.position').on('click', switchPosition);
+  </script>
+</body>
+</html>
