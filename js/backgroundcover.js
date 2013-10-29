@@ -86,9 +86,8 @@
     Ctrl.centerY = centerY = parseInt(posY, 10) === 50;
 
     Ctrl.inlineBg = element[0].style.backgroundImage === '';
-
-    exp = new RegExp('^url\\([\\"](.+)[\\"]\\)');
-    Ctrl.src = src ? src : element.css('background-image').replace(exp, '$1');
+    exp = new RegExp('\\"', 'gi');
+    Ctrl.src = src ? src : element.css('background-image').split(/(\(|\))/)[2].replace(exp, '');
     Ctrl.img = createImage();
     Ctrl.img.css(propX, 0);
     Ctrl.img.css(propY, 0);
