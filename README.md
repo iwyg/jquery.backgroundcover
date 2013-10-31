@@ -35,6 +35,17 @@ $('.background-image').backgroundcover();
 // explicitly:
 $('.my-div').backgroundcover('path/to/image.jpg');
 
+// You can also specify a position value which will override values found by
+// the actuall backgound positioning `(left|center|right, top|center|bottom)`.
+// Positioning will always fall back to `center center` if no value is found at all
+
+// Use this item to add a background image and set positioning
+$('.my-div').backgroundcover('path/to/image.jpg', {x: 'left', y: 'top'});
+
+// Use an existing background image but manipulate its position
+
+$('.background-image').backgroundcover({x: 'center', y: 'bottom'});
+
 // you may also pass options:
 
 // setting `poll` to true will start polling the element for size change
