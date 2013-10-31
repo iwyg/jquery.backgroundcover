@@ -9,11 +9,6 @@
    * @license MIT
    */
 
-  var defaults = {
-    poll: true,
-    destroy: undefined
-  };
-
   // polyfill for requestAnimationFrame
   // @see https://gist.github.com/desandro/1866474
   var lastTime = 0;
@@ -50,6 +45,17 @@
     };
   }
 
+  var defaults = {
+    poll: false,
+    destroy: undefined
+  };
+
+  var IMG_LANDSCAPE = 'landscape';
+  var IMG_PORTRAIT  = 'portrait';
+
+  /**
+   * @private
+   */
   function createImage() {
     var _img = new Image(), img = $(_img);
     img.css({
@@ -60,34 +66,34 @@
     //return $('<img style="position:absolute; display:block;/>');
   }
 
+  /**
+   * @private
+   */
   function createContainer(img) {
     var container = $('<div style="position:absolute;z-index:-99999999;width:100%;height:100%;" class="background-cover-image"/>');
     container.append(img);
     return container;
   }
 
+  /**
+   * @private
+   */
   function initImage(Ctrl, element, src) {
-    var exp, h, w, posXY, posX, posY, propX, propY, cPropX, cPropY, centerX, centerY;
+    var h, w, posXY, posX, posY, propX, propY, cPropX, cPropY, centerX, centerY;
 
-    posX = element.css('backgroundPositionX');
-    posY = element.css('backgroundPositionY');
+    posXY = element.css('background-position').split(' ');
+    posX = posXY[0];
+    posY = posXY[1];
 
-    if (!posY || !posX) {
-      posXY = element.css('backgroundPosition').split(' ');
-      posX = posXY[0];
-      posY = posXY[1];
-    }
-
-    Ctrl.propX = propX = parseInt(posX, 10) === 100 ? 'right' : 'left';
-    Ctrl.propY = propY = parseInt(posY, 10) === 100 ? 'bottom' : 'top';
-    Ctrl.cPropX = cPropX = propX === 'right' ? 'marginRight' : 'marginLeft';
-    Ctrl.cPropY = cPropY = propY === 'bottom' ? 'bottom' : 'top';
-    Ctrl.centerX = centerX = parseInt(posX, 10) === 50;
-    Ctrl.centerY = centerY = parseInt(posY, 10) === 50;
+    Ctrl.props.propX = propX = parseInt(posX, 10) === 100 ? 'right' : 'left';
+    Ctrl.props.propY = propY = parseInt(posY, 10) === 100 ? 'bottom' : 'top';
+    Ctrl.props.cPropX = cPropX = propX === 'right' ? 'marginRight' : 'marginLeft';
+    Ctrl.props.cPropY = cPropY = propY === 'bottom' ? 'bottom' : 'top';
+    Ctrl.props.centerX = centerX = parseInt(posX, 10) === 50;
+    Ctrl.props.centerY = centerY = parseInt(posY, 10) === 50;
 
     Ctrl.inlineBg = element[0].style.backgroundImage === '';
-    exp = new RegExp('\\"', 'gi');
-    Ctrl.src = src ? src : element.css('background-image').split(/(\(|\))/)[2].replace(exp, '');
+    Ctrl.src = src ? src : element.css('background-image').split(/(\(|\))/)[2].replace(new RegExp('\\"', 'gi'), '');
     Ctrl.img = createImage();
     Ctrl.img.css(propX, 0);
     Ctrl.img.css(propY, 0);
@@ -95,9 +101,9 @@
     Ctrl.img.load(function () {
       Ctrl.imgH = h = Ctrl.img.prop('height');
       Ctrl.imgW = w = Ctrl.img.prop('width');
-      Ctrl.mode = h < w ? 'landscape' : 'portrait';
+      Ctrl.mode = h < w ? IMG_LANDSCAPE : IMG_PORTRAIT;
       Ctrl.img.addClass(Ctrl.mode);
-      Ctrl.ratio = w / h;
+      Ctrl.props.ratio = w / h;
       Ctrl.ready = true;
       element.trigger('coverresize');
     }).attr('src', Ctrl.src);
@@ -115,14 +121,23 @@
 
   }
 
+  /**
+   * @private
+   */
   function ratio(element) {
     return element.width() / element.height();
   }
 
+  /**
+   * @private
+   */
   function getDestroyHandler(options) {
     return options.destroy ? ' ' + options.destroy : '';
   }
 
+  /**
+   * @private
+   */
   function bindEvents(Ctrl, element) {
     var eH = element.width(), eW = element.height(),
     poll = function () {
@@ -155,53 +170,58 @@
       $(window).on('resize.backgroundcover orientationchange.backgroundcover', Ctrl.noPoll);
     }
 
-    element.on('remove destroyed' + getDestroyHandler(Ctrl.options), function () {
-      Ctrl.destroy();
-    });
-
-    element.on('coverresize resize', function () {
-      var elemRatio = ratio(element),
-      css, ih, iw,
-      h = Ctrl.container.height(),
-      w = Ctrl.container.width(),
-      mt = 0,
-      ml = 0;
-
-      if (Ctrl.mode === 'landscape') {
-        // container height larger than image height
-        if (elemRatio < Ctrl.ratio) {
-          ih = h;
-          iw = h * Ctrl.ratio;
-        } else {
-          ih = w / Ctrl.ratio;
-          iw = w;
-        }
-      }
-
-      if (Ctrl.mode === 'portrait') {
-        // container width larger than image width
-        if (elemRatio > Ctrl.ratio) {
-          ih = w / Ctrl.ratio;
-          iw = w;
-        } else {
-          ih = h;
-          iw = h * Ctrl.ratio;
-        }
-      }
-
-      ml = Ctrl.centerX ? 0 - Math.round((iw - w) / 2) : 0;
-      mt = Ctrl.centerY ? 0 - Math.round((ih - h) / 2) : 0;
-
-      css = {
-        height: Math.round(ih),
-        width: Math.round(iw)
-      };
-      css[Ctrl.cPropX] = ml;
-      css[Ctrl.cPropY] = mt;
-      Ctrl.img.css(css);
-    });
+    element.on('remove destroyed' + getDestroyHandler(Ctrl.options), $.proxy(Ctrl, Ctrl.destroy));
+    element.on('coverresize resize', $.proxy(null, resizeImage, Ctrl, element));
   }
 
+  /**
+   * @private
+   */
+  function resizeImage(Ctrl, element) {
+    var elemRatio = ratio(element),
+    css, ih, iw,
+    h = Ctrl.container.height(),
+    w = Ctrl.container.width(),
+    mt = 0,
+    ml = 0;
+
+    if (Ctrl.mode === IMG_LANDSCAPE) {
+      // container height larger than image height
+      if (elemRatio < Ctrl.props.ratio) {
+        ih = h;
+        iw = h * Ctrl.props.ratio;
+      } else {
+        ih = w / Ctrl.props.ratio;
+        iw = w;
+      }
+    }
+
+    if (Ctrl.mode === IMG_PORTRAIT) {
+      // container width larger than image width
+      if (elemRatio > Ctrl.ratio) {
+        ih = w / Ctrl.ratio;
+        iw = w;
+      } else {
+        ih = h;
+        iw = h * Ctrl.ratio;
+      }
+    }
+
+    ml = Ctrl.props.centerX ? 0 - Math.round((iw - w) / 2) : 0;
+    mt = Ctrl.props.centerY ? 0 - Math.round((ih - h) / 2) : 0;
+
+    css = {
+      height: Math.round(ih),
+      width: Math.round(iw)
+    };
+    css[Ctrl.props.cPropX] = ml;
+    css[Ctrl.props.cPropY] = mt;
+    Ctrl.img.css(css);
+  }
+
+  /**
+   * @private
+   */
   function unbindEvents(element, Ctrl) {
     element.off('coverresize resize orientationchange');
     element.off('remove destroyed' + getDestroyHandler(Ctrl.options));
@@ -212,9 +232,15 @@
   }
 
   function BackgroundCover(element, src, options) {
+
+    this.props = {};
+
+    this.img   = {};
+
     this.options = options;
     this.element = element;
     this.ready = false;
+
     this.inlineBg = false;
 
     initImage(this, element, src);
@@ -222,6 +248,9 @@
   }
 
   BackgroundCover.prototype = {
+
+    props : {},
+
     destroy: function () {
       if (this.poll) {
         cancelAnimationFrame(this.poll);
@@ -248,5 +277,4 @@
       el.data('backgroundCover', new BackgroundCover(el, src, opts));
     });
   };
-
 }(this, this.jQuery));

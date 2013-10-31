@@ -37,9 +37,9 @@ $('.my-div').backgroundcover('path/to/image.jpg');
 
 // you may also pass options:
 
-// setting `poll` to false will stop polling the element for size change
-// and instead only resizes the image on window resize events. `poll` is set to
-// `true`by default.
+// setting `poll` to true will start polling the element for size change
+// instead of resizing the image on a window resize event. `poll` is set to
+// `false`by default.
 $('.my-div').backgroundcover('path/to/image.jpg', {poll: false});
 
 // you can also add your custom destroy events, e.g. for angular you'd add
