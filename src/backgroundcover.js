@@ -47,7 +47,9 @@
 
   var defaults = {
     poll: false,
-    destroy: undefined
+    destroy: undefined,
+    x: undefined,
+    y: undefined
   };
 
   var IMG_LANDSCAPE = 'landscape';
@@ -82,8 +84,8 @@
     var h, w, posXY, posX, posY, propX, propY, cPropX, cPropY, centerX, centerY;
 
     posXY = element.css('background-position').split(' ');
-    posX = posXY[0];
-    posY = posXY[1];
+    posX = Ctrl.options.x ? Ctrl.options.x : posXY[0];
+    posY = Ctrl.options.y ? Ctrl.options.y : posXY[1];
 
     Ctrl.props.propX = propX = parseInt(posX, 10) === 100 ? 'right' : 'left';
     Ctrl.props.propY = propY = parseInt(posY, 10) === 100 ? 'bottom' : 'top';
