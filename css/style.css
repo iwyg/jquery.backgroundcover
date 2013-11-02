@@ -7,6 +7,7 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 100%;
   line-height: 1;
+  background-color: #121212;
 }
 body, a {
   color: #fff;
@@ -25,6 +26,12 @@ footer {
 .container, html, body {
   width: 100%;
   height: 100%;
+}
+
+.container {
+  z-index: -100000000000;
+  position: relative;
+  background: url('../loader.gif') center center no-repeat;
 }
 img {
   display: block;
