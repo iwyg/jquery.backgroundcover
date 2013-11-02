@@ -29,7 +29,7 @@ footer {
 }
 
 .container {
-  z-index: -100000000000;
+  z-index: 0;
   position: relative;
   background: url('../loader.gif') center center no-repeat;
 }
@@ -149,6 +149,10 @@ footer ul li:hover, footer ul li.active {
     max-width: 75%;
   }
 
+  .container {
+    background-position: center 20%;
+  }
+
   h1 {
     font-size: 5em;
   }
@@ -185,6 +189,10 @@ footer ul li:hover, footer ul li.active {
     position: relative;
   }
 
+
+  .container {
+    background-position: center 10%;
+  }
   h1 {
     font-size: 4em;
   }
