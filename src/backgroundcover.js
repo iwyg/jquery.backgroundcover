@@ -10,7 +10,7 @@
    */
 
   var defaults = {
-    poll: true,
+    poll: false,
     destroy: undefined
   };
 
