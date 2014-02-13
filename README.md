@@ -73,4 +73,7 @@ Modernizr.testStyles(
 );
 ```
 
+An angularJS directive can be found [here][2]
+
 [1]: http://modernizr.com/
+[2]: https://github.com/iwyg/angular-backgroundcover
